@@ -171,6 +171,7 @@ class Garage:
         # contare quante auto sono a gpl, benzina, gasolio, metano
         # contare quante auto hanno targa italiana -> sfruttare una regex per capirlo
         # calcolare incassi giornalieri
+        #
 
 
 
