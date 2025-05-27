@@ -1,0 +1,7 @@
+beautifulsoup4==4.13.4
+bs4==0.0.2
+geopy==2.4.1
+mysql-connector==2.2.9
+requests==2.32.3
+urllib3==2.4.0
+Werkzeug==3.1.3
