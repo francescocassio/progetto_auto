@@ -1,18 +1,126 @@
-#Creazione classe rettangolo
-class Rectangle:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+class Persona:
+    def __init__(self, nome, cognome, eta, sesso, nazione):
+        self.nome = nome.capitalize()
+        self.cognome = cognome.capitalize()
+        self.eta = eta
 
-    def area(self):
-        return self.width * self.height
+        if sesso.upper() in ["M", "F"]:
+            self.sesso = sesso.upper()
+        else:
+            self.sesso = "ND"
+        self.nazione = nazione
 
-    def perimeter(self):
-        return 2 * (self.width + self.height)
+    def stampaDati(self):
+        print("Nome:", self.nome)
+        print("Cognome:", self.cognome)
+        print("Eta:", self.eta)
+        print("Nazione:", self.nazione)
+        print("---------------------")
+
+    def calcola_data_nascita(self):
+        from datetime import datetime
+        data_odierna = datetime.today()
+        anno_odierno = data_odierna.year
+
+        anno_nascita = anno_odierno - self.eta
+
+        return anno_nascita
+
+    def is_maggiorenne(self):
+        if self.eta >= 18:
+            return True
+        else:
+            return False
+
+    def inserisci_nel_db(self, nome_db, nome_tabella):
+        import mysql.connector
+
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database= nome_db
+        )
+
+        cursor = conn.cursor()
+
+        sql = f"INSERT INTO {nome_tabella} (nome, cognome, eta, sesso, nazione) VALUES (%s, %s,%s, %s,%s)"
+        valori = (self.nome, self.cognome, self.eta, self.sesso, self.nazione)
+
+        cursor.execute(sql, valori)
+        conn.commit()
+
+        print(f"{cursor.rowcount} record inserito nella tabella {nome_tabella} del database {nome_db}.")
+
+        cursor.close()
+        conn.close()
+
+class Automobile:
+    def __init__(self, targa, marchio, modello, tipo_veicolo, capienza, carburante, consumo):
+        self.targa = targa
+        self.marchio = marchio
+        self.modello = modello
+        self.tipo_veicolo = tipo_veicolo
+        self.capienza = capienza
+        self.carburante = carburante
+        self.proprietario = None
+        self.km_percorsi = 0
+        self.consumo_ogni_100km = consumo
+
+    def assegna_proprietario(self, propr):
+        if not isinstance(propr, Persona):
+            raise TypeError("Il proprietario deve essere un'istanza della classe Persona")
+        self.proprietario = propr
+
+    def stampa_dati(self):
+        print("Modello:", self.modello)
+        print("Marchio:", self.marchio)
+        print("KM percorsi:", self.km_percorsi)
+
+        if self.proprietario is not None:
+            print("Proprietario:")
+            self.proprietario.stampaDati()
+        else:
+            print("Nessun proprietario")
+
+    def consumo_al_km(self):
+        return self.consumo_ogni_100km / 100
+
+    def aggiungi_km(self, km_p):
+        self.km_percorsi += km_p
+
+    def calcola_spesa_viaggio(self, partenza, arrivo):
+        from supporto_mappe import calcola_distanza, calcola_prezzi_carburante, calcola_distanza2
+        km_calcolati = calcola_distanza2(partenza.lower(), arrivo.lower())
+
+        spesa_carburante = calcola_prezzi_carburante()[self.carburante]
+
+        spesa_totale = (km_calcolati * self.consumo_al_km()) * spesa_carburante
+
+        print(f"Per questo viaggio da {partenza} ad {arrivo} consumerai {spesa_totale:.2f}€")
+
+if __name__ == '__main__':
+    a1 = Automobile("FK345LP", "BMW", "X6", "SUV", 5, "Benzina", 12)
+    a2 = Automobile("GA325LP", "Fiat", "Punto", "Utilitaria", 5, "GPL", 7)
+
+    p = Persona("mario", "rossi", 45, "M", "Italiana")
+
+    try:
+        a1.assegna_proprietario(p)
+    except TypeError as t:
+        print("hai passato un valore errato come proprietario")
+
+    a1.stampa_dati()
+
+    a1.aggiungi_km(1345)
+
+    a1.stampa_dati()
+
+    a1.aggiungi_km(4000)
+
+    a1.stampa_dati()
+
+    a2.calcola_spesa_viaggio("Bari", "New York")
 
 
-#creazione oggetto di classe rettangolo
 
-r1 = Rectangle(30, 40)
-
-print(r1.area())
