@@ -76,6 +76,7 @@ class Automobile:
         print("Modello:", self.modello)
         print("Marchio:", self.marchio)
         print("KM percorsi:", self.km_percorsi)
+        print("Targa:", self.targa)
 
         if self.proprietario is not None:
             print("Proprietario:")
@@ -99,28 +100,47 @@ class Automobile:
 
         print(f"Per questo viaggio da {partenza} ad {arrivo} consumerai {spesa_totale:.2f}€")
 
-if __name__ == '__main__':
-    a1 = Automobile("FK345LP", "BMW", "X6", "SUV", 5, "Benzina", 12)
-    a2 = Automobile("GA325LP", "Fiat", "Punto", "Utilitaria", 5, "GPL", 7)
 
-    p = Persona("mario", "rossi", 45, "M", "Italiana")
+class Garage:
+    def __init__(self, nome, citta, capienza):
+        self.nome = nome
+        self.citta = citta
+        self.capienza = capienza
+        self.auto_parcheggiate = []
 
-    try:
-        a1.assegna_proprietario(p)
-    except TypeError as t:
-        print("hai passato un valore errato come proprietario")
+    def si_puo_parcheggiare(self):
+        if len(self.auto_parcheggiate) < self.capienza:
+            return True
+        else:
+            return False
 
-    a1.stampa_dati()
+    def posti_disponibili(self):
+        return self.capienza - len(self.auto_parcheggiate)
 
-    a1.aggiungi_km(1345)
+    def aggiungi_auto(self, autom):
+        if not isinstance(autom, Automobile):
+            raise TypeError("Puoi aggiungere solo automobili")
 
-    a1.stampa_dati()
+        if self.si_puo_parcheggiare():
+            self.auto_parcheggiate.append(autom)
+            print(f"Auto con targa {autom.targa} aggiunta al garage")
+        else:
+            print("Il parcheggio è pieno!")
 
-    a1.aggiungi_km(4000)
+    def stampa_dati(self):
+        print("Parcheggio", self.nome)
+        print("Capienza:", self.capienza)
+        print("Posti disponibili:", self.posti_disponibili())
 
-    a1.stampa_dati()
+        print("Auto parcheggiate: ")
 
-    a2.calcola_spesa_viaggio("Bari", "New York")
+        for auto in self.auto_parcheggiate:
+            auto.stampa_dati()
+
+
+
+
+
 
 
 
