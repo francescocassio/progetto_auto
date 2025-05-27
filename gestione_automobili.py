@@ -107,6 +107,8 @@ class Garage:
         self.citta = citta
         self.capienza = capienza
         self.auto_parcheggiate = []
+        self.incassi = {}
+
 
     def si_puo_parcheggiare(self):
         if len(self.auto_parcheggiate) < self.capienza:
@@ -117,13 +119,31 @@ class Garage:
     def posti_disponibili(self):
         return self.capienza - len(self.auto_parcheggiate)
 
-    def aggiungi_auto(self, autom):
+    def aggiungi_auto(self, autom, data = None):
+
+        if data is None:
+            from datetime import datetime
+            oggi = datetime.now()
+
+            anno = str(oggi.year)
+            mese = str(oggi.month)
+            giorno = str(oggi.day)
+            giorno_attuale = f"{giorno}-{mese}-{anno}"
+        else:
+            giorno_attuale = data
+
+        costo = 11.99
         if not isinstance(autom, Automobile):
             raise TypeError("Puoi aggiungere solo automobili")
 
         if self.si_puo_parcheggiare():
             self.auto_parcheggiate.append(autom)
             print(f"Auto con targa {autom.targa} aggiunta al garage")
+
+            if giorno_attuale not in self.incassi:
+                self.incassi[giorno_attuale] = costo
+            else:
+                self.incassi[giorno_attuale] += costo
         else:
             print("Il parcheggio è pieno!")
 
@@ -136,6 +156,21 @@ class Garage:
 
         for auto in self.auto_parcheggiate:
             auto.stampa_dati()
+
+        print("Incassi:")
+        print(self.incassi)
+
+
+
+
+        # possibili implementazioni nella classe Garage
+
+        # rimuovere un'auto
+        # creare un menù da riga di comando per: creare auto, creare persone, assegnare proprietari, aggiungere auto nel garage
+        # calcolare media dei km percorsi nelle auto parcheggiate -> calcola_km_medi()
+        # contare quante auto sono a gpl, benzina, gasolio, metano
+        # contare quante auto hanno targa italiana -> sfruttare una regex per capirlo
+        # calcolare incassi giornalieri
 
 
 

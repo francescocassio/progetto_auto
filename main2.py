@@ -14,4 +14,9 @@ if __name__ == '__main__':
     mioGarage.aggiungi_auto(a1)
     mioGarage.aggiungi_auto(a2)
 
+    mioGarage.aggiungi_auto(a2, "28-05-2025")
+
     mioGarage.stampa_dati()
+
+
+
